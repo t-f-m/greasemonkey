@@ -20,7 +20,7 @@ li[id^="post"][class*="is_reblogged_mine"] img {
 li[id^="post"][class*="is_reblogged_mine"] blockquote {
 		display:none !important;
 }
-]]>;
+]]>.toString();
 
 if (typeof GM_addStyle != "undefined") {
 	GM_addStyle(css);
@@ -45,10 +45,12 @@ function is_reblogged_mine(doc, xpath){
   }
 }
 
+var hookKeyWord="reblogged you";
+
 var boot=function(){
-  is_reblogged_mine(document,'.//li[contains(@class,"not_mine")][contains(@class,"is_reblog")][div[@class="post_info"][text()[contains(self::text(),"reblogged you") or contains(self::text(),"があなたからリブログ")]]]');
+  is_reblogged_mine(document,'.//li[contains(@class,"not_mine")][contains(@class,"is_reblog")][div[@class="post_info"][contains(.,"reblogged you") or contains(.,"があなたからリブログ")]]');
   window.addEventListener('AutoPagerize_DOMNodeInserted', function(evt){
-    is_reblogged_mine(evt.target,'.//div[@class="post_info"][text()[contains(self::text(),"reblogged you") or contains(self::text(),"があなたからリブログ")]]/parent::li');
+    is_reblogged_mine(evt.target,'.//div[@class="post_info"][contains(.,"reblogged you") or contains(.,"があなたからリブログ")]/parent::li');
   }, false);
 }
 if(window.AutoPagerize){
@@ -58,4 +60,4 @@ if(window.AutoPagerize){
 }
 })();
 
-//  ./descendant-or-self::li[contains(@class,"not_mine")][contains(@class,"is_reblog")][div[@class="post_info"][text()[contains(self::text(),"reblogged you")]]]
+//  ./descendant-or-self::li[contains(@class,"not_mine")][contains(@class,"is_reblog")][div[@class="post_info"][contains(.,"reblogged you") or contains(.,"があなたからリブログ")]]
