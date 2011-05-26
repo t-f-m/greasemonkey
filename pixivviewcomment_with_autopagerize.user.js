@@ -3,6 +3,7 @@
 // @namespace      nanakoso
 // @description    PIXIVコメント履歴をデフォルトで見れるように Ver. 1.1
 // @include        http://www.pixiv.net/member_illust.php*mode=medium*
+// @include        http://www.pixiv.net/novel/show.php*
 // ==/UserScript==
 
 function wrap_xmlhttpRequest(options) {
@@ -102,8 +103,8 @@ function viewComment(target, url){
       el.innerHTML=obj.responseText;
       el.style.display="";
       el.style.overflow="visible";
-      getElementsByXPath(".//div[@id='one_comment_view']",target)[0].style.display="none";
-      getElementsByXPath(".//div[@id='one_comment_view2']",target)[0].style.display="";
+      getElementsByXPath(".//p[@id='one_comment_view']",target)[0].style.display="none";
+      getElementsByXPath(".//p[@id='one_comment_view2']",target)[0].style.display="";
     },
   })
 }
