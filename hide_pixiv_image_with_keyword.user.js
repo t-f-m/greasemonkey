@@ -18,10 +18,7 @@ function hide(node){
   var safeKey=SAFE_KEYWORD.join("|");
   for(var i=0, l=titles.snapshotLength;i<l;i++){
     var title=titles.snapshotItem(i);
-    if(title.textContent.match(safeKey)){
-      continue;
-    }
-    if(title.textContent.match(hideKey)){
+    if(!title.textContent.match(safeKey) && title.textContent.match(hideKey)){
       hooked.push(title);
     }
   }
