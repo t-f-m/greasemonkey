@@ -39,7 +39,7 @@ if (typeof GM_addStyle != "undefined") {
 	}
 }
 
-var XPATH='./descendant-or-self::li[contains(@class,"not_mine")][contains(@class,"is_reblog")][div[@class="post_info"][contains(.,"reblogged you") or contains(.,"があなたからリブログ")]]';
+var XPATH='./descendant-or-self::li[contains(@class,"not_mine")][contains(@class,"is_reblog")][div[@class="post_info"]/text()[not(a)][contains(.,"reblogged you") or contains(.,"があなたからリブログ")]]';
 
 function is_reblogged_mine(doc){
   var target = document.evaluate(XPATH,doc,null,7,null);
