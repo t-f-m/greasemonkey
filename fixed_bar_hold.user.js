@@ -5,6 +5,18 @@
 // @include        *
 // ==/UserScript==
 
+
+SITEINFO = [
+  /* 
+  {
+    url:         '',
+    targetXPath: '',
+//    position:    '',
+//    appendStyle: '',
+  },
+  */
+]
+
 //via AutoPagerize
 function getElementsByXPath(xpath, node) {
     var nodesSnapshot = getXPathResult(xpath, node,
@@ -40,7 +52,7 @@ function getXPathResult(xpath, node, resultType) {
     }
     return doc.evaluate(xpath, node, resolver, resultType, null)
 }
-
+
 function wrap_xmlhttpRequest(options) {
 	var req = new XMLHttpRequest();
 	try {
@@ -71,65 +83,20 @@ function getXPath(xpath){
 }
 */
 
-SITEINFO = [
-/* 
-  {
-    url:         '',
-    targetXPath: '',
-//    position:    '',
-  },
-*/
-  {
-    url:         '^http://www\.dannychoo\.com/',
-    targetXPath: 'id("global-bar-wrapper global-bar")',
-//    position:    '',
-  },
-  /*
-  {
-    url:         '^http://twitter\.com/',
-    targetXPath: '//div[@class="fixed-banners"]',
-//    position:    '',
-  },
-  */
-  {
-    url:         '^https?://twitter.com/',
-    targetXPath: '//div[@class="fixed-banners"]|id("top-stuff")',
-  },
-  {
-    url:         '^http://.+\.nicovideo\.jp/',
-    targetXPath: 'id("PAGEHEADMENU")/div|id("navWrap bar navi")',
-  },
-  {
-    url:         '^http://(?:[^fw])+\.hatena\.ne\.jp',
-    targetXPath: 'id("header")|id("info-header")',
-  },
-  {
-    url:         '^http://ameblo\.jp/',
-    targetXPath: 'id("amebaBar")',
-  },
-  {
-    url:         '^http://yaplog\.jp/',
-    targetXPath: 'id("common_head")',
-  },
-  {
-    url:         '^http://plixi\.com/',
-    targetXPath: 'id("lockerz header_box")',
-  },
-  {
-    url:         '^http://[^./]+\.blog\\d+.fc2\.com/',
-    targetXPath: 'id("sh_fc2blogheadbar")',
-  },
-  {
-    url:         '^http://blog\.goo\.ne\.jp/',
-    targetXPath: 'id("global-header")',
-  },
-]
 bar_hold(SITEINFO);
-
-function fixed_fixer(xpath){
-  var target = getElementsByXPath(xpath);
+//getComputedStyle??
+function fixed_fixer(si){
+  var target = getElementsByXPath(si.targetXPath);
   for(var i = 0, maxi = target.length; i < maxi; i++){
-    target[i].style.setProperty("position","absolute","important");
+    var targetStyle = target[i].style;
+    targetStyle.setProperty("position",si.position||"absolute","important");
+    if(targetStyle && si.appendStyle){
+      var append = JSON.parse(si.appendStyle);
+      //alert("top" in append);
+      for(var key in append){
+        targetStyle.setProperty(key, append[key],"important");
+      }
+    }
   }
 }
 function check_url(url){
@@ -139,11 +106,12 @@ function bar_hold(siteinfo){
   var xpath=null;
   for(var i=0,l=siteinfo.length;i<l;++i){
     if(check_url(siteinfo[i].url)){
-      xpath=siteinfo[i].targetXPath;
+      //xpath=siteinfo[i].targetXPath;
+      si=siteinfo[i];
       break;
     }
   }
-  if(xpath){
-    fixed_fixer(xpath);
+  if(si){
+    fixed_fixer(si);
   }
 }
