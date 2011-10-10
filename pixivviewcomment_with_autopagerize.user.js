@@ -56,36 +56,6 @@ wrap_xmlhttpRequest({
   },//
 })
 
-function getElementsByXPath(xpath, node) {
-    var nodesSnapshot = getXPathResult(xpath, node,
-        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE)
-    var data = []
-    for (var i = 0; i < nodesSnapshot.snapshotLength; i++) {
-        data.push(nodesSnapshot.snapshotItem(i))
-    }
-    return data
-}
-
-function getXPathResult(xpath, node, resultType) {
-    var node = node || document
-    var doc = node.ownerDocument || node
-    var resolver = doc.createNSResolver(node.documentElement || node)
-    // Use |node.lookupNamespaceURI('')| for Opera 9.5
-    var defaultNS = node.lookupNamespaceURI(null)
-
-    if (defaultNS) {
-        const defaultPrefix = '__default__'
-        xpath = addDefaultPrefix(xpath, defaultPrefix)
-        var defaultResolver = resolver
-        resolver = function (prefix) {
-            return (prefix == defaultPrefix)
-                ? defaultNS : defaultResolver.lookupNamespaceURI(prefix)
-        }
-    }
-    return doc.evaluate(xpath, node, resolver, resultType, null)
-}
-
-
 function viewComment(target, url){
   i_id=url.match(/\d+/);
   params="i_id="+i_id+"&u_id="+u_id;
@@ -99,19 +69,23 @@ function viewComment(target, url){
     },
     data: params,
     onload: function(obj){
-      el = getElementsByXPath(".//div[@id='one_comment_area']",target)[0];
+      el = document.evaluate(".//div[@id='one_comment_area']",target,null,7,null).snapshotItem(0);
       el.innerHTML=obj.responseText;
-      el.style.display="";
-      el.style.overflow="visible";
-      getElementsByXPath(".//p[@id='one_comment_view']",target)[0].style.display="none";
-      getElementsByXPath(".//p[@id='one_comment_view2']",target)[0].style.display="";
+      //alert(el.innerHTML)
+      el.style.setProperty("display","",null);
+      el.style.setProperty("overflow","visible",null);
+      document.evaluate(".//p[@id='one_comment_view']",target,null,7,null).snapshotItem(0).style.setProperty("display","none",null);
+      document.evaluate(".//p[@id='one_comment_view2']",target,null,7,null).snapshotItem(0).style.setProperty("display","",null);
     },
+    onerror: function(obj){
+      alert("onerror")
+    }
   })
 }
 
 var boot=function(){
   window.addEventListener('AutoPagerize_DOMNodeInserted', function(evt){
-    if(getElementsByXPath(".//div[@id='one_comment_area']", evt.target)[0]){
+    if(evt.target.className=='works_info'){
       viewComment(evt.target, evt.newValue);
     }
   }, false);
