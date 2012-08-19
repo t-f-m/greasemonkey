@@ -38,10 +38,10 @@ if (typeof GM_addStyle != "undefined") {
 	}
 }
 
-var XPATH='./descendant-or-self::li[contains(@class,"not_mine")][contains(@class,"is_reblog")][div[@class="post_info"]/text()[not(a)][contains(.,"reblogged you") or contains(.,"があなたからリブログ")]]';
+var XPATH = 'id("posts")/li[div[@class="post_info"][contains(.,"reblogged you") or contains(.,"があなたからリブログ")][count(a)=1]]'
 
-function is_reblogged_mine(doc){
-  var target = document.evaluate(XPATH,doc,null,7,null);
+function is_reblogged_mine(htmlDoc){
+  var target = htmlDoc.evaluate(XPATH, htmlDoc, null, 7, null);
   for(var i = 0, maxi = target.snapshotLength; i < maxi; i++){
     target.snapshotItem(i).className += " is_reblogged_mine ";
   }
@@ -50,13 +50,10 @@ function is_reblogged_mine(doc){
 //var hookKeyWord="reblogged you";
 
 var boot=function(){
-  window.addEventListener('AutoPagerize_DOMNodeInserted', function(evt){
-    is_reblogged_mine(evt.target);
-  }, false);
+  sharedObject.AutoPagerize.addDocumentFilter(is_reblogged_mine);
 }
-
 is_reblogged_mine(document);
-if(window.AutoPagerize){
+if(window.AutoPagerize || sharedObject.AutoPagerize){
   boot();
 }else{
   window.addEventListener('GM_AutoPagerizeLoaded', boot, false);
