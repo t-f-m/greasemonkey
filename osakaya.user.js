@@ -3,6 +3,10 @@
 // @namespace      http://d.hatena.ne.jp/t_f_m/
 // @include        http://www.osakaya.co.jp/kensaku/KENSAKU2.asp*
 // @include        http://www.osakaya.co.jp/kensaku/kensaku2.asp
+// @include        http://www2.osakaya.co.jp/kensaku/KENSAKU2.asp*
+// @include        http://www2.osakaya.co.jp/kensaku/kensaku2.asp
+// @resource       JSDeferred https://raw.github.com/cho45/jsdeferred/master/jsdeferred.userscript.js
+// @grant          GM_xmlhttpRequest
 // ==/UserScript==
 (function(){
 var t = document.evaluate('//table[@width="95%"]/tbody/tr/td/a[contains(@href,"kensaku3")]',document,null,7,null)
@@ -51,12 +55,12 @@ var boot=function(){
     loadRanking(aInDoc)});
   */
 }
-if(window.AutoPagerize){
+if(window.AutoPagerize || sharedObject.AutoPagerize){
   boot();
 }else{
   window.addEventListener('GM_AutoPagerizeLoaded', boot, false);
 }
-
+
 /*
 //table[@width="95%"]/tbody/tr/td/a[contains(@href,"kensaku3")]
 //img/following-sibling::table/tbody/tr/td[font/a] for kensaku3
